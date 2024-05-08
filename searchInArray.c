@@ -35,7 +35,7 @@ int main()
 
     int count = 0;
 
-#pragma omp parallel for collapse(2) shared(matrix, rows, cols, key, indices, count) private(i, j)
+#pragma omp parallel for shared(matrix, rows, cols, key, indices, count) private(i, j)
     for (i = 0; i < rows; i++)
     {
         for (j = 0; j < cols; j++)
