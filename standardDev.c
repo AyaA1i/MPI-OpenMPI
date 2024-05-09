@@ -17,7 +17,7 @@ int main()
     int i;
 
     // Generate n random elements
-    int nGeneratedNumbers[4];
+    int nGeneratedNumbers[number];
     double localSum = 0.0;
     double localSquaredDifference = 0.0;
     double localMean = 0.0;
