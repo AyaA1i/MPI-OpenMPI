@@ -35,43 +35,46 @@ int main()
 
     int count = 0;
 
-#pragma omp parallel for shared(matrix, rows, cols, key, indices, count) private(i, j)
+#pragma omp parallel for shared(matrix, rows, cols, key, indices) private(i, j)
     for (i = 0; i < rows; i++)
     {
         for (j = 0; j < cols; j++)
         {
             if (matrix[i][j] == key)
             {
-                indices[count][0] = i;
-                indices[count][1] = j;
-                count++;
-                printf("Thread %d found key at index (%d, %d)\n", omp_get_thread_num(), i, j);
-            }
+                #pragma omp critical
+                {
+                    indices[count][0] = i;
+                    indices[count][1] = j;
+                    count++;
+                    printf("Thread %d found key at index : (%d, %d) \n", omp_get_thread_num(), i, j);
+                }
         }
     }
-    for (int i = 0; i < rows; i++)
-    {
-        free(matrix[i]);
-    }
-    free(matrix);
+}
+for (int i = 0; i < rows; i++)
+{
+    free(matrix[i]);
+}
+free(matrix);
 
-    if (count == 0)
-    {
-        printf("-1 \n");
-        return 0;
-    }
-
-    printf("Indices where the key %d is found:\n", key);
-    for (int i = 0; i < count; i++)
-    {
-        printf("(%d, %d)\n", indices[i][0], indices[i][1]);
-    }
-
-    for (int i = 0; i < count; i++)
-    {
-        free(indices[i]);
-    }
-    free(indices);
-
+if (count == 0)
+{
+    printf("-1 \n");
     return 0;
+}
+
+printf("Indices where the key %d is found:\n", key);
+for (int i = 0; i < count; i++)
+{
+    printf("(%d, %d)\n", indices[i][0], indices[i][1]);
+}
+
+for (int i = 0; i < count; i++)
+{
+    free(indices[i]);
+}
+free(indices);
+
+return 0;
 }
